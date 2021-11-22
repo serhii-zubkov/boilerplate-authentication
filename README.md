@@ -7,7 +7,7 @@ Create PostgreSQL connection (you can run `docker-compose up -d`) and create .en
 ```bash
 $ npm i
 $ npm run build
-$ npm run typeorm migration:run
+$ typeorm migration:run
 ```
 
 ## Running the app

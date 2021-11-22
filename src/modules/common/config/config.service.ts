@@ -5,6 +5,8 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import { Tag } from 'constants/index';
 
+import { User } from 'modules/crud/users/entities';
+
 interface AppConfig {
   env: object;
 }
@@ -50,7 +52,7 @@ export class ConfigurationService {
         username: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
         port: parseInt(process.env.DB_PORT) || 5432,
-        entities: ['dist/src/modules/crud/**/entities/*.entity{.ts,.js}'],
+        entities: [User],
         migrations: ['dist/src/database/migrations/*.{ts,js}'],
         cli: {
           migrationsDir: 'src/database/migrations',

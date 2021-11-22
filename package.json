@@ -18,8 +18,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./tests-e2e/jest-e2e.json",
-    "typeorm": "typeorm"
+    "test:e2e": "jest --config ./tests-e2e/jest-e2e.json --detectOpenHandles --forceExit",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -77,13 +77,20 @@
       "json",
       "ts"
     ],
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.(t|j)s",
+      "!*.(t|j)s",
+      "!database/migrations/**",
+      "!database/seeds/**"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
