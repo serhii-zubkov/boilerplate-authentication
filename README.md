@@ -1,3 +1,5 @@
+# Boilerplate Authentication API
+
 ## Installation
 
 Create PostgreSQL connection (you can run `docker-compose up -d`) and create .env file by .env.example template. Then,
