@@ -7,6 +7,8 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { SwaggerAuthorizedPostRequest } from 'decorators';
+import { fakeUser } from 'tests';
 import { AuthService } from './auth.service';
 import { UsersService } from 'modules/crud/users/users.service';
 import { AuthLoginDto, AuthRegisterDto } from './dto';
@@ -19,28 +21,14 @@ export class AuthController {
     private usersService: UsersService,
   ) {}
 
-  @ApiResponse({
-    status: 201,
-    description: 'Authorized with Bearer key.',
-    schema: {
-      example: {
-        token: 'bearer-access-token',
-        user: {
-          userId: 1,
-          email: 'admin@gmail.com',
-          firstName: 'Admin',
-          lastName: 'Admin',
-          roles: ['admin'],
-          created: '2021-11-22T07:41:01.518Z',
-          updated: '2021-11-22T07:41:01.518Z',
-        },
-      },
-    },
-  })
-  @ApiResponse({ status: 400, description: 'Bad request.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized.' })
-  @ApiResponse({ status: 500, description: 'Internal server error.' })
   @Post('auth/login')
+  @SwaggerAuthorizedPostRequest(
+    {
+      token: 'bearer-access-token',
+      user: fakeUser.dto,
+    },
+    'Authorized with Bearer key',
+  )
   async login(@Body() authLogin: AuthLoginDto) {
     const user = await this.authService.checkUser(authLogin);
 
@@ -56,27 +44,8 @@ export class AuthController {
     };
   }
 
-  @ApiResponse({
-    status: 201,
-    description: 'User is successfully registered.',
-    schema: {
-      example: {
-        user: {
-          userId: 1,
-          email: 'admin@gmail.com',
-          firstName: 'Admin',
-          lastName: 'Admin',
-          roles: ['admin'],
-          created: '2021-11-22T07:41:01.518Z',
-          updated: '2021-11-22T07:41:01.518Z',
-        },
-      },
-    },
-  })
-  @ApiResponse({ status: 400, description: 'Bad request.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized.' })
-  @ApiResponse({ status: 500, description: 'Internal server error.' })
   @Post('auth/register')
+  @SwaggerAuthorizedPostRequest(fakeUser.dto, 'User is successfully registered')
   async register(@Body() authRegister: AuthRegisterDto) {
     if (authRegister.password !== authRegister.confirmationPassword) {
       throw new HttpException(

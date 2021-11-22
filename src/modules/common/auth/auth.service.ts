@@ -17,6 +17,10 @@ export class AuthService {
     return bcrypt.hash(password, 10);
   }
 
+  static hashPasswordSync(password: string): string {
+    return bcrypt.hashSync(password, 10);
+  }
+
   static async comparePassword(
     password: string,
     passwordHash: string,

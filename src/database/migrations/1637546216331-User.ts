@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner, getRepository } from 'typeorm';
 import { User } from 'modules/crud/users/entities';
 import { AuthService } from 'modules/common/auth/auth.service';
-import { Roles } from 'constants/index';
+import { Role } from 'constants/index';
 
 export class User1637546216331 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -12,7 +12,7 @@ export class User1637546216331 implements MigrationInterface {
         "lastName" character varying(255) NOT NULL,
         "email" character varying(255) NOT NULL,
         "passwordHash" character varying(60) NOT NULL,
-        "roles" text[] NOT NULL DEFAULT '{${Roles.User}}',
+        "roles" text[] NOT NULL DEFAULT '{${Role.User}}',
         "created" timestamp NOT NULL DEFAULT NOW(),
         "updated" timestamp NOT NULL DEFAULT NOW(),
         CONSTRAINT "PK_0ea8af24543da734f41663014e3" PRIMARY KEY ("userId")
@@ -26,7 +26,7 @@ export class User1637546216331 implements MigrationInterface {
         '${await AuthService.hashPassword('admin')}',
         'Admin',
         'Admin',
-        '{${Roles.Admin}}',
+        '{${Role.Admin}}',
         '${now.toISOString()}',
         '${now.toISOString()}'
       ) RETURNING "userId";`,

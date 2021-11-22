@@ -18,7 +18,9 @@ export class UsersService {
       passwordHash: await AuthService.hashPassword(createUserDto.password),
     });
 
-    return await this.usersRepository.save(user);
+    const { userId } = await this.usersRepository.save(user);
+
+    return this.findOne(userId);
   }
 
   async findAll(): Promise<User[]> {

@@ -11,6 +11,15 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import {
+  SwaggerAuthorizedPostRequest,
+  SwaggerAuthorizedGetRequest,
+  SwaggerAuthorizedPatchRequest,
+  SwaggerAuthorizedDeleteRequest,
+  OwnerOrRoles,
+} from 'decorators';
+import { Role } from 'constants/index';
+import { fakeUserAdmin, fakeUser } from 'tests';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto/';
 
@@ -20,17 +29,27 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  @OwnerOrRoles(Role.Admin)
+  @SwaggerAuthorizedPostRequest(fakeUser.dto)
+  async create(@Body() createUserDto: CreateUserDto) {
+    if (await this.usersService.findOneByEmail(createUserDto.email)) {
+      throw new HttpException('email is already using', HttpStatus.BAD_REQUEST);
+    }
+
     return this.usersService.create(createUserDto);
   }
 
   @Get()
+  @OwnerOrRoles(Role.Admin)
+  @SwaggerAuthorizedGetRequest([fakeUserAdmin.dto, fakeUser.dto])
   async findAll() {
     const users = await this.usersService.findAll();
     return users.map((user) => user.dto);
   }
 
   @Get(':id')
+  @OwnerOrRoles(Role.Admin)
+  @SwaggerAuthorizedGetRequest(fakeUser.dto)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const user = await this.usersService.findOne(id);
 
@@ -42,6 +61,8 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @OwnerOrRoles(Role.Admin)
+  @SwaggerAuthorizedPatchRequest(fakeUser.dto)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
@@ -56,7 +77,9 @@ export class UsersController {
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  @OwnerOrRoles(Role.Admin)
+  @SwaggerAuthorizedDeleteRequest()
+  async remove(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.remove(id);
   }
 }

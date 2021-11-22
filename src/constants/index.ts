@@ -1,4 +1,4 @@
-import { Tags } from './tags';
-import { Roles } from './roles';
+import { Tag } from './tag';
+import { Role } from './role';
 
-export { Tags, Roles };
+export { Tag, Role };

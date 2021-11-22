@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import ProcessEnv = NodeJS.ProcessEnv;
 import * as dotenv from 'dotenv';
 dotenv.config();
-import { Tags } from 'constants/index';
+import { Tag } from 'constants/index';
 
 interface AppConfig {
   env: object;
@@ -37,7 +37,7 @@ export class ConfigurationService {
         title: 'Boilerplate Authentication API',
         description: 'Boilerplate Authentication API docs',
         version: '1.0',
-        tags: Object.keys(Tags).map((key) => Tags[key]),
+        tags: Object.keys(Tag).map((key) => Tag[key]),
       },
       auth: {
         secret: 'boilerplate-authentication',

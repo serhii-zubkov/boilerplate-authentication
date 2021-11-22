@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { Roles } from 'constants/index';
+import { Role } from 'constants/index';
 
 @Entity('User')
 export class User {
@@ -19,13 +19,13 @@ export class User {
   lastName: string;
 
   @Column('text', { name: 'roles', array: true })
-  roles: string[] = [Roles.User];
+  roles: string[];
 
   @Column('timestamp', { name: 'created' })
-  created: Date = new Date();
+  created: Date;
 
   @Column('timestamp', { name: 'updated' })
-  updated: Date = new Date();
+  updated: Date;
 
   public get id(): number {
     return this.userId;
@@ -35,5 +35,27 @@ export class User {
     const dto = Object.assign({}, this);
     delete dto.passwordHash;
     return dto;
+  }
+
+  public hasAllRoles(roles?: string[]): boolean {
+    if (!roles) {
+      return true;
+    }
+
+    const missingRoles = roles.filter(
+      (value) => this.roles.indexOf(value) === -1,
+    );
+    return missingRoles.length === 0;
+  }
+
+  public hasOneOfRoles(roles?: string[]): boolean {
+    if (!roles) {
+      return false;
+    }
+
+    const missingRoles = roles.filter(
+      (value) => this.roles.indexOf(value) === -1,
+    );
+    return missingRoles.length < roles.length;
   }
 }
