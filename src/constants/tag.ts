@@ -1,4 +1,4 @@
 export enum Tag {
-  Authentication = 'Authentication',
   UsersCrud = 'Users CRUD',
+  Authentication = 'Authentication',
 }
