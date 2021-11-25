@@ -25,6 +25,19 @@ export class ConfigurationService {
     return (processEnv || configVariable) as T;
   }
 
+  private getRedisUrl(env: ProcessEnv): string {
+    let redisUrl = 'redis://';
+    if (env.REDIS_USER && env.REDIS_PASSWORD) {
+      redisUrl += `${env.REDIS_USER}:${env.REDIS_PASSWORD}@`;
+    } else if (env.REDIS_USER) {
+      redisUrl += `${env.REDIS_USER}@`;
+    }
+    redisUrl += `${env.REDIS_HOST || 'localhost'}:${
+      parseInt(env.REDIS_PORT) || 6379
+    }`;
+    return redisUrl;
+  }
+
   private getAppConfiguration(env: ProcessEnv) {
     return {
       NODE_ENV: 'development',
@@ -58,6 +71,10 @@ export class ConfigurationService {
           migrationsDir: 'src/database/migrations',
         },
         synchronize: false,
+      },
+      redis: {
+        enabled: false,
+        url: this.getRedisUrl(env),
       },
       env,
     };

@@ -3,8 +3,7 @@ networks:
   default:
     name: boilerplate_authentication_network
 services:
-
-  postgres:
+  boilerplate_authentication_postgres:
     hostname: boilerplate_authentication_postgres
     container_name: boilerplate_authentication_postgres
     image: postgres:alpine
@@ -16,30 +15,30 @@ services:
       - 5432:5432
     networks:
       - default
-
-  pgadmin:
+  boilerplate_authentication_pgadmin:
     container_name: boilerplate_authentication_pgadmin
-    image: adminer
+    image: adminer:latest
     ports:
       - 5431:8080
     networks:
       - default
-
-  redis:
+  boilerplate_authentication_redis:
     hostname: boilerplate_authentication_redis
     container_name: boilerplate_authentication_redis
-    image: redis
+    image: redis:alpine
     ports:
       - 6379:6379
     networks:
       - default
-
-  redis-commander:
+  boilerplate_authentication_redis_commander:
+    hostname: boilerplate_authentication_redis_commander
     container_name: boilerplate_authentication_redis_commander
     image: rediscommander/redis-commander:latest
     environment:
-      - REDIS_HOSTS=local:redis:6379
+      - REDIS_HOSTS=localhost:boilerplate_authentication_redis:6379
     ports:
-      - "8081:8081"
+      - 6380:8081
+    networks:
+      - default
     depends_on:
-        - redis
+      - boilerplate_authentication_redis
